@@ -14,12 +14,35 @@
     }
     h1 {
       font-size: 1.4rem;
-      margin: 0 0 0.5rem;
+      margin: 0 0 0.25rem;
     }
     .subtitle {
       font-size: 0.9rem;
       color: #c0c4cc;
-      margin-bottom: 1rem;
+      margin-bottom: 0.4rem;
+    }
+    .legend {
+      font-size: 0.8rem;
+      color: #999fac;
+      margin-bottom: 0.75rem;
+    }
+    .legend-pill {
+      display: inline-block;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid #343842;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-right: 0.35rem;
+    }
+    .legend-pill.visited {
+      color: #a5d6ff;
+      border-color: #345472;
+    }
+    .legend-pill.uploaded {
+      color: #4ade80;
+      border-color: #256c3b;
     }
     .controls {
       display: flex;
@@ -61,10 +84,10 @@
     ul#recipeList li {
       border-bottom: 1px solid #1a1d25;
       padding: 0.45rem 0;
-      display: flex;
-      justify-content: space-between;
-      gap: 0.5rem;
-      align-items: baseline;
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr) auto;
+      gap: 0.4rem 0.75rem;
+      align-items: center;
     }
     ul#recipeList li:last-child {
       border-bottom: none;
@@ -73,10 +96,13 @@
       color: #f0c24b;
       text-decoration: none;
       font-size: 0.95rem;
-      word-break: break-all;
+      word-break: break-word;
     }
     ul#recipeList a:hover {
       text-decoration: underline;
+    }
+    ul#recipeList a:visited {
+      color: #a5d6ff;
     }
     .filename {
       font-family: Menlo, Monaco, "SF Mono", monospace;
@@ -85,30 +111,49 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 40vw;
+      justify-self: flex-start;
     }
-    .pill {
-      display: inline-block;
-      padding: 0.1rem 0.4rem;
-      border-radius: 999px;
-      border: 1px solid #343842;
+    .upload-toggle {
       font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      border-width: 1px;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    .upload-toggle.uploaded {
+      border-color: #256c3b;
+      background: #0c2214;
+      color: #4ade80;
+    }
+    .upload-toggle.not-uploaded {
+      border-color: #343842;
+      background: #10131a;
       color: #9ca0aa;
     }
-    @media (max-width: 600px) {
-      .filename {
-        max-width: 45vw;
+    @media (max-width: 700px) {
+      ul#recipeList li {
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.4fr);
+        grid-template-rows: auto auto;
+        grid-template-areas:
+          "title upload"
+          "filename filename";
       }
+      ul#recipeList a { grid-area: title; }
+      .filename { grid-area: filename; }
+      .upload-toggle { grid-area: upload; justify-self: flex-end; }
     }
   </style>
 </head>
 <body>
   <h1>Atlas Recipe Index</h1>
   <div class="subtitle">
-    Auto-reads <span class="pill">.html</span> files from your GitHub <strong>recipes</strong> repo.
-    No filenames are hard-coded in this index.
+    Auto-reads <span class="legend-pill">.html</span> files from your GitHub <strong>recipes</strong> repo. No filenames are hard-coded in this index.
+  </div>
+  <div class="legend">
+    <span class="legend-pill visited">Visited link</span>
+    <span class="legend-pill uploaded">Uploaded to AnyList</span>
   </div>
 
   <div class="controls">
@@ -131,14 +176,34 @@
 
     let allFiles = [];
 
+    const UPLOADED_KEY_PREFIX = "atlasUploaded:";
+
     function toDisplayTitle(filename) {
-      // strip extension
       const base = filename.replace(/\.html?$/i, "");
-      // replace dashes with spaces and title-case
       return base
         .split("-")
         .map(w => w.charAt(0).toUpperCase() + w.slice(1))
         .join(" ");
+    }
+
+    function isUploaded(filename) {
+      try {
+        return window.localStorage.getItem(UPLOADED_KEY_PREFIX + filename) === "1";
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function setUploaded(filename, value) {
+      try {
+        if (value) {
+          window.localStorage.setItem(UPLOADED_KEY_PREFIX + filename, "1");
+        } else {
+          window.localStorage.removeItem(UPLOADED_KEY_PREFIX + filename);
+        }
+      } catch (e) {
+        console.warn("localStorage unavailable", e);
+      }
     }
 
     function renderList() {
@@ -153,22 +218,39 @@
       if (!visible.length) {
         statusEl.textContent = "No recipes match that filter.";
       } else {
-        statusEl.textContent = `${visible.length} recipes shown.`;
+        statusEl.textContent = visible.length === allFiles.length
+          ? `${visible.length} recipes shown.`
+          : `${visible.length} recipes match filter (of ${allFiles.length} total).`;
       }
 
       for (const file of visible) {
         const li = document.createElement("li");
 
+        // Link (title)
         const link = document.createElement("a");
         link.href = `./${file.name}`;
         link.textContent = toDisplayTitle(file.name);
 
+        // Raw filename
         const meta = document.createElement("span");
         meta.className = "filename";
         meta.textContent = file.name;
 
+        // Uploaded toggle
+        const uploadedBtn = document.createElement("button");
+        const uploaded = isUploaded(file.name);
+        uploadedBtn.className = "upload-toggle " + (uploaded ? "uploaded" : "not-uploaded");
+        uploadedBtn.textContent = uploaded ? "UPLOADED" : "Mark uploaded";
+        uploadedBtn.type = "button";
+        uploadedBtn.addEventListener("click", () => {
+          const nowUploaded = !isUploaded(file.name);
+          setUploaded(file.name, nowUploaded);
+          renderList();
+        });
+
         li.appendChild(link);
         li.appendChild(meta);
+        li.appendChild(uploadedBtn);
         listEl.appendChild(li);
       }
     }
@@ -201,7 +283,6 @@
         return res.json();
       })
       .then(files => {
-        // Only keep .html/.htm files, skip index.html itself
         allFiles = files
           .filter(f => f.type === "file")
           .filter(f => /\.html?$/i.test(f.name))
