@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AnyList Collection Test H — Main Dishes</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; margin: 18px; line-height: 1.35; }
+    h1 { margin: 0 0 10px 0; font-size: 22px; }
+    .meta { color: #444; font-size: 13px; margin: 0 0 14px 0; }
+    h2 { font-size: 16px; margin: 18px 0 8px 0; }
+    ul, ol { margin: 6px 0 0 20px; }
+    .note { margin-top: 14px; padding: 10px 12px; border: 1px solid #ddd; border-radius: 10px; background: #fafafa; }
+    code { background: #f2f2f2; padding: 0 4px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<div itemscope itemtype="https://schema.org/Recipe">
+  <h1 itemprop="name">AnyList Collection Test H — Main Dishes</h1>
+  <p class="meta">
+    <span><strong>Goal:</strong> See if <code>recipeCategory=Main Dishes</code> auto-adds this recipe to AnyList’s built-in <em>Main Dishes</em> collection.</span>
+  </p>
+
+  <meta itemprop="recipeCategory" content="Main Dishes">
+  <meta itemprop="recipeYield" content="3 servings">
+  <meta itemprop="prepTime" content="PT10M">
+  <meta itemprop="cookTime" content="PT12M">
+  <meta itemprop="totalTime" content="PT22M">
+
+  <h2>Ingredients</h2>
+  <ul>
+    <li itemprop="recipeIngredient">1/2 bag frozen broccoli florets</li>
+    <li itemprop="recipeIngredient">1 jar garlic powder</li>
+    <li itemprop="recipeIngredient">1 jar black pepper</li>
+    <li itemprop="recipeIngredient">1 bottle olive oil</li>
+    <li itemprop="recipeIngredient">1 package chicken breast tenderloins</li>
+    <li itemprop="recipeIngredient">1 bag frozen cauliflower rice</li>
+  </ul>
+
+  <h2>Preparation Steps</h2>
+  <ol>
+    <li itemprop="recipeInstructions">Preheat air fryer to 390°F for 3 minutes.</li>
+    <li itemprop="recipeInstructions">Measure out 1/2 bag frozen broccoli florets; reseal and return remaining broccoli to freezer. Toss broccoli with 1 tsp olive oil, 1/2 tsp garlic powder, and black pepper.</li>
+    <li itemprop="recipeInstructions">Air-fry broccoli 8–10 minutes at 390°F, shaking halfway.</li>
+    <li itemprop="recipeInstructions">Measure out 12 oz chicken tenderloins from the package (use remaining for another recipe). Toss with 2 tsp olive oil, 1 tsp garlic powder, and black pepper.</li>
+    <li itemprop="recipeInstructions">Air-fry chicken 10–12 minutes at 390°F, flipping at 6 minutes, until internal temp reaches 165°F.</li>
+    <li itemprop="recipeInstructions">Microwave 1/2 bag frozen cauliflower rice per bag directions; fluff and serve with chicken and broccoli.</li>
+  </ol>
+
+  <div class="note">
+    <strong>How to test:</strong> Import this file into AnyList, then check whether it automatically appears inside the <em>Main Dishes</em> collection (without manually assigning it).
+  </div>
+</div>
+
+</body>
+</html>

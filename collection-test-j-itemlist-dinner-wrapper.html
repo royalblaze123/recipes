@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AnyList Collection Test J — ItemList Dinner Wrapper</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; margin: 18px; line-height: 1.35; }
+    h1 { margin: 0 0 10px 0; font-size: 22px; }
+    .meta { color: #444; font-size: 13px; margin: 0 0 14px 0; }
+    h2 { font-size: 16px; margin: 18px 0 8px 0; }
+    ul, ol { margin: 6px 0 0 20px; }
+    .note { margin-top: 14px; padding: 10px 12px; border: 1px solid #ddd; border-radius: 10px; background: #fafafa; }
+    code { background: #f2f2f2; padding: 0 4px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<div itemscope itemtype="https://schema.org/ItemList">
+  <h1>AnyList Collection Test J — “Dinner” ItemList Wrapper</h1>
+  <p class="meta">
+    <strong>Goal:</strong> See if AnyList treats an <code>ItemList</code> page like a collection import and/or uses the list name to create/assign a collection.
+  </p>
+
+  <meta itemprop="name" content="Dinner">
+  <meta itemprop="description" content="Dinner collection wrapper test">
+
+  <h2>Embedded Recipes</h2>
+
+  <div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+    <meta itemprop="position" content="1">
+    <div itemprop="item" itemscope itemtype="https://schema.org/Recipe">
+      <h2 itemprop="name">Dinner Test Recipe 1 — Turkey Taco Bowl</h2>
+      <meta itemprop="recipeCategory" content="Dinner">
+      <meta itemprop="recipeYield" content="3 servings">
+      <meta itemprop="prepTime" content="PT10M">
+      <meta itemprop="cookTime" content="PT15M">
+      <meta itemprop="totalTime" content="PT25M">
+      <h3>Ingredients</h3>
+      <ul>
+        <li itemprop="recipeIngredient">1 package lean ground turkey</li>
+        <li itemprop="recipeIngredient">1 bag frozen cauliflower rice</li>
+        <li itemprop="recipeIngredient">1 can black beans</li>
+        <li itemprop="recipeIngredient">1 jar salsa</li>
+        <li itemprop="recipeIngredient">1 jar chili powder</li>
+        <li itemprop="recipeIngredient">1 jar cumin</li>
+        <li itemprop="recipeIngredient">1 bottle olive oil</li>
+      </ul>
+      <h3>Preparation Steps</h3>
+      <ol>
+        <li itemprop="recipeInstructions">Heat a skillet over medium-high. Add 2 tsp olive oil.</li>
+        <li itemprop="recipeInstructions">Cook 1 package lean ground turkey 10–12 minutes, breaking up, until no pink remains.</li>
+        <li itemprop="recipeInstructions">Season with 1 tsp chili powder and 1 tsp cumin; stir 30 seconds.</li>
+        <li itemprop="recipeInstructions">Microwave 1 bag frozen cauliflower rice per bag directions; fluff.</li>
+        <li itemprop="recipeInstructions">Drain and rinse 1 can black beans; warm in skillet 2 minutes.</li>
+        <li itemprop="recipeInstructions">Serve over cauliflower rice with 1/2 jar salsa; refrigerate remaining salsa.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+    <meta itemprop="position" content="2">
+    <div itemprop="item" itemscope itemtype="https://schema.org/Recipe">
+      <h2 itemprop="name">Dinner Test Recipe 2 — Lemon-Garlic Chicken + Green Beans</h2>
+      <meta itemprop="recipeCategory" content="Dinner">
+      <meta itemprop="recipeYield" content="3 servings">
+      <meta itemprop="prepTime" content="PT10M">
+      <meta itemprop="cookTime" content="PT15M">
+      <meta itemprop="totalTime" content="PT25M">
+      <h3>Ingredients</h3>
+      <ul>
+        <li itemprop="recipeIngredient">1 package chicken breast tenderloins</li>
+        <li itemprop="recipeIngredient">1 bag frozen green beans</li>
+        <li itemprop="recipeIngredient">1 bottle olive oil</li>
+        <li itemprop="recipeIngredient">1 jar garlic powder</li>
+        <li itemprop="recipeIngredient">1 jar black pepper</li>
+        <li itemprop="recipeIngredient">1 lemon</li>
+      </ul>
+      <h3>Preparation Steps</h3>
+      <ol>
+        <li itemprop="recipeInstructions">Preheat air fryer to 390°F for 3 minutes.</li>
+        <li itemprop="recipeInstructions">Measure out 12 oz chicken tenderloins; toss with 2 tsp olive oil, 1 tsp garlic powder, and black pepper.</li>
+        <li itemprop="recipeInstructions">Air-fry chicken 10–12 minutes at 390°F, flipping at 6 minutes, to 165°F internal.</li>
+        <li itemprop="recipeInstructions">Microwave frozen green beans per bag directions; drain.</li>
+        <li itemprop="recipeInstructions">Toss green beans with 1 tsp olive oil, 1/2 tsp garlic powder, black pepper, and juice from 1 lemon; serve with chicken.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>How to test:</strong> Import this page into AnyList. Watch what happens:
+    <ul>
+      <li>Does it import only the first recipe?</li>
+      <li>Does it import both recipes?</li>
+      <li>Does it create a “Dinner” collection or auto-assign either recipe to a Dinner collection?</li>
+    </ul>
+  </div>
+</div>
+
+</body>
+</html>
