@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Atlas Recipe Index – GitHub Auto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      margin: 0;
+      padding: 1rem 1.25rem 2rem;
+      background: #050608;
+      color: #f5f5f5;
+    }
+    h1 {
+      font-size: 1.4rem;
+      margin: 0 0 0.25rem;
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: #c0c4cc;
+      margin-bottom: 0.4rem;
+    }
+    .legend {
+      font-size: 0.8rem;
+      color: #999fac;
+      margin-bottom: 0.75rem;
+    }
+    .legend-pill {
+      display: inline-block;
+      padding: 0.1rem 0.4rem;
+      border-radius: 999px;
+      border: 1px solid #343842;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-right: 0.35rem;
+    }
+    .legend-pill.visited {
+      color: #a5d6ff;
+      border-color: #345472;
+    }
+    .legend-pill.uploaded {
+      color: #4ade80;
+      border-color: #256c3b;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    input[type="search"] {
+      flex: 1 1 180px;
+      padding: 0.45rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid #2e323b;
+      background: #0b0d11;
+      color: #f5f5f5;
+      font-size: 0.9rem;
+    }
+    button {
+      padding: 0.45rem 0.7rem;
+      border-radius: 6px;
+      border: 1px solid #2e323b;
+      background: #10131a;
+      color: #f5f5f5;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    button:active {
+      transform: translateY(1px);
+    }
+    #status {
+      font-size: 0.8rem;
+      color: #a0a4ad;
+      margin-bottom: 0.4rem;
+    }
+    ul#recipeList {
+      list-style: none;
+      padding: 0;
+      margin: 0.4rem 0 0;
+    }
+    ul#recipeList li {
+      border-bottom: 1px solid #1a1d25;
+      padding: 0.45rem 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr) auto;
+      gap: 0.4rem 0.75rem;
+      align-items: center;
+    }
+    ul#recipeList li:last-child {
+      border-bottom: none;
+    }
+    ul#recipeList a {
+      color: #f0c24b;
+      text-decoration: none;
+      font-size: 0.95rem;
+      word-break: break-word;
+    }
+    ul#recipeList a:hover {
+      text-decoration: underline;
+    }
+    ul#recipeList a:visited {
+      color: #a5d6ff;
+    }
+    .filename {
+      font-family: Menlo, Monaco, "SF Mono", monospace;
+      font-size: 0.7rem;
+      color: #848893;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      justify-self: flex-start;
+    }
+    .upload-toggle {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      border-width: 1px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    .upload-toggle.uploaded {
+      border-color: #256c3b;
+      background: #0c2214;
+      color: #4ade80;
+    }
+    .upload-toggle.not-uploaded {
+      border-color: #343842;
+      background: #10131a;
+      color: #9ca0aa;
+    }
+    @media (max-width: 700px) {
+      ul#recipeList li {
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.4fr);
+        grid-template-rows: auto auto;
+        grid-template-areas:
+          "title upload"
+          "filename filename";
+      }
+      ul#recipeList a { grid-area: title; }
+      .filename { grid-area: filename; }
+      .upload-toggle { grid-area: upload; justify-self: flex-end; }
+    }
+
+    details.bucket {
+      border: 1px solid #223045;
+      border-radius: 12px;
+      background: #0b0d11;
+      padding: 10px 12px;
+    }
+    .bucket-summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: #4ade80;
+      user-select: none;
+    }
+    ul.bucket-list {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0 0;
+    }
+    ul.bucket-list li {
+      border-bottom: 1px solid #1a1d25;
+      padding: 0.45rem 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.1fr) auto;
+      gap: 0.4rem 0.75rem;
+      align-items: center;
+    }
+    ul.bucket-list li:last-child { border-bottom: none; }
+    .bucket-clear {
+      margin-top: 10px;
+      width: 100%;
+    }
+    @media (max-width: 700px) {
+      ul.bucket-list li {
+        grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.4fr);
+        grid-template-rows: auto auto;
+        grid-template-areas:
+          "title upload"
+          "filename filename";
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Atlas Recipe Index</h1>
+  <div class="subtitle">
+    Auto-reads <span class="legend-pill">.html</span> files from your GitHub <strong>recipes</strong> repo. No filenames are hard-coded in this index.
+  </div>
+  <div class="legend">
+    <span class="legend-pill visited">Visited link</span>
+    <span class="legend-pill uploaded">Uploaded to AnyList</span>
+  </div>
+
+  <div class="controls">
+    <input id="filterInput" type="search" placeholder="Filter recipes by name…">
+    <button id="downloadBtn" type="button">Download .txt list</button>
+  </div>
+  <div id="status">Loading recipe list from GitHub…</div>
+
+  <ul id="recipeList"></ul>
+
+  <details id="uploadedBox" class="bucket" style="margin-top:14px; display:none;">
+    <summary class="bucket-summary">
+      Uploaded to AnyList (<span id="uploadedCount">0</span>)
+    </summary>
+    <ul id="uploadedList" class="bucket-list"></ul>
+    <button id="clearUploaded" type="button" class="bucket-clear">Clear uploaded</button>
+  </details>
+
+  <script>
+    const repoOwner = "royalblaze123";
+    const repoName = "recipes";
+    const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/`;
+
+    const filterInput = document.getElementById("filterInput");
+    const statusEl = document.getElementById("status");
+    const listEl = document.getElementById("recipeList");
+    const uploadedBox = document.getElementById("uploadedBox");
+    const uploadedListEl = document.getElementById("uploadedList");
+    const uploadedCountEl = document.getElementById("uploadedCount");
+    const clearUploadedBtn = document.getElementById("clearUploaded");
+    const downloadBtn = document.getElementById("downloadBtn");
+
+    let allFiles = [];
+
+    const UPLOADED_KEY_PREFIX = "atlasUploaded:";
+
+    function toDisplayTitle(filename) {
+      const base = filename.replace(/\.html?$/i, "");
+      return base
+        .split("-")
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ");
+    }
+
+    function isUploaded(filename) {
+      try {
+        return window.localStorage.getItem(UPLOADED_KEY_PREFIX + filename) === "1";
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function setUploaded(filename, value) {
+      try {
+        if (value) {
+          window.localStorage.setItem(UPLOADED_KEY_PREFIX + filename, "1");
+        } else {
+          window.localStorage.removeItem(UPLOADED_KEY_PREFIX + filename);
+        }
+      } catch (e) {
+        console.warn("localStorage unavailable", e);
+      }
+    }
+
+    function renderList() {
+      const q = filterInput.value.trim().toLowerCase();
+
+      // Clear both lists
+      listEl.innerHTML = "";
+      uploadedListEl.innerHTML = "";
+
+      const matchesFilter = (name) => {
+        if (!q) return true;
+        return name.toLowerCase().includes(q);
+      };
+
+      const visible = allFiles.filter(f => matchesFilter(f.name));
+
+      const notUploaded = visible.filter(f => !isUploaded(f.name));
+      const uploaded = visible.filter(f => isUploaded(f.name));
+
+      // Status
+      if (!visible.length) {
+        statusEl.textContent = "No recipes match that filter.";
+      } else {
+        const base = (visible.length === allFiles.length)
+          ? `${visible.length} recipes shown.`
+          : `${visible.length} recipes match filter (of ${allFiles.length} total).`;
+        statusEl.textContent = `${base} Not uploaded: ${notUploaded.length}. Uploaded: ${uploaded.length}.`;
+      }
+
+      // Uploaded bucket visibility + count
+      uploadedCountEl.textContent = String(uploaded.length);
+      uploadedBox.style.display = uploaded.length ? "block" : "none";
+
+      const buildRow = (file, targetUl, forceUploadedState = null) => {
+        const li = document.createElement("li");
+
+        // Link (title)
+        const link = document.createElement("a");
+        link.href = `./${file.name}`;
+        link.textContent = toDisplayTitle(file.name);
+
+        // Auto-toggle uploaded on click (trust-but-verify workflow)
+        link.addEventListener("click", () => {
+          setUploaded(file.name, true);
+          // Let navigation proceed; the state is stored for next load
+        }, { passive: true });
+
+        // Raw filename
+        const meta = document.createElement("span");
+        meta.className = "filename";
+        meta.textContent = file.name;
+
+        // Uploaded toggle
+        const uploadedBtn = document.createElement("button");
+        const uploadedNow = (forceUploadedState === null) ? isUploaded(file.name) : forceUploadedState;
+
+        uploadedBtn.className = "upload-toggle " + (uploadedNow ? "uploaded" : "not-uploaded");
+        uploadedBtn.textContent = uploadedNow ? "UPLOADED" : "Mark uploaded";
+        uploadedBtn.type = "button";
+
+        uploadedBtn.addEventListener("click", () => {
+          const nowUploaded = !isUploaded(file.name);
+          setUploaded(file.name, nowUploaded);
+          renderList();
+        });
+
+        li.appendChild(link);
+        li.appendChild(meta);
+        li.appendChild(uploadedBtn);
+        targetUl.appendChild(li);
+      };
+
+      // Render not-uploaded in main list
+      for (const file of notUploaded) buildRow(file, listEl);
+
+      // Render uploaded into collapsed section (sorted A→Z for consistency)
+      uploaded
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach(file => buildRow(file, uploadedListEl, true));
+    }
+
+    // Clear uploaded bucket (local only)
+    clearUploadedBtn.addEventListener("click", () => {
+      try {
+        for (const f of allFiles) {
+          window.localStorage.removeItem(UPLOADED_KEY_PREFIX + f.name);
+        }
+      } catch (e) {}
+      renderList();
+    });
+
+    function updateDownloadButton() {
+      const lines = allFiles
+        .map(f => f.name)
+        .sort((a, b) => a.localeCompare(b));
+
+      const blob = new Blob([lines.join("\n") + "\n"], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+
+      downloadBtn.onclick = () => {
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "atlas-recipe-index-auto.txt";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      };
+    }
+
+    filterInput.addEventListener("input", renderList);
+
+    fetch(apiUrl)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error("GitHub API error: " + res.status);
+        }
+        return res.json();
+      })
+      .then(files => {
+        allFiles = files
+          .filter(f => f.type === "file")
+          .filter(f => /\.html?$/i.test(f.name))
+          .filter(f => !/^index\.html?$/i.test(f.name))
+          .sort((a, b) => a.name.localeCompare(b.name));
+
+        if (!allFiles.length) {
+          statusEl.textContent = "No .html recipes found in this folder yet.";
+          return;
+        }
+        statusEl.textContent = `${allFiles.length} recipes found in GitHub.`;
+        renderList();
+        updateDownloadButton();
+      })
+      .catch(err => {
+        console.error(err);
+        statusEl.textContent = "Could not load file list from GitHub. Check your connection or repo name.";
+      });
+  </script>
+</body>
+</html>
