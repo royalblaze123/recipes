@@ -348,6 +348,23 @@ uploadedBtn.addEventListener("click", () => {
         .forEach(file => buildRow(file, uploadedListEl, true));
     }
 
+    // When returning from a recipe page (iOS/Safari often uses back-forward cache),
+    // re-render so newly "uploaded" items immediately move into the Uploaded section.
+    window.addEventListener("pageshow", () => {
+      try { renderList(); } catch (e) {}
+    });
+
+    // Also refresh on focus/visibility changes (covers some embedded browsers)
+    window.addEventListener("focus", () => {
+      try { renderList(); } catch (e) {}
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        try { renderList(); } catch (e) {}
+      }
+    });
+
+
     // Clear uploaded bucket (local only)
     clearUploadedBtn.addEventListener("click", () => {
       try {
