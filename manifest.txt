@@ -25,6 +25,9 @@ air-fryer-lemon-dill-salmon-potatoes-green-beans.html
 air-fryer-lemon-oregano-salmon-roasted-peppers-farro.html
 air-fryer-sesame-salmon-snap-peas-edamame.html
 air-fryer-smoky-paprika-salmon-mushrooms-spinach-microgreens.html
+atlas-rotisserie-chicken-jalapeno-poppers-sweet-potato-broccoli.html
+atlas-steak-mashed-potatoes-broccoli.html
+atlas-steak-shrimp-stuffed-mushrooms-sweet-potato.html
 avocado-lime-green-sauce.html
 bowls3-01-chicken-lemon-dijon.html
 bowls3-02-turkey-mild-soy-sesame.html
@@ -805,6 +808,7 @@ roastfinish2-17-chicken-thigh-style-cutlets-breast-dijon-herb-finish.html
 roastfinish2-18-turkey-cutlets-smoky-tomato-herb-finish.html
 roastfinish2-19-pork-tenderloin-medallions-umami-worcester-finish.html
 roastfinish2-20-lean-beef-steak-strips-low-sodium-soy-ginger-finish.html
+rotisserie-chicken-jalapeno-poppers-sweet-potato-broccoli.html
 salad-chicken-chickpea-arugula-microgreens.html
 salad-chicken-farro-roasted-pepper-cucumber.html
 salad-egg-white-chicken-greekish-no-olives.html
@@ -889,6 +893,7 @@ sp-salsa-verde-shrimp-mini-sweet-pepper-boats.html
 sp-sheet-pan-herb-chicken-potatoes-broccoli.html
 sp-turkey-taco-stuffed-poblanos.html
 sp-umami-pepper-lean-beef-with-quinoa-and-broccoli.html
+steak-shrimp-stuffed-mushrooms-sweet-potato.html
 stirfry-sheetpan-chicken-green-beans-potatoes.html
 stirfry-sheetpan-pork-tenderloin-broccoli-carrots.html
 stirfry-sheetpan-salmon-asparagus-farro.html
